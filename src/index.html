@@ -8,16 +8,46 @@
     <script src="https://unpkg.com/aframe-render-order-component@1.1.0/dist/aframe-render-order-component.min.js"></script>
   </head>
   <body>
-    <a-scene background="color: #FAFAFA">
+    <a-scene background="color: #FAFAFA" stats>
     	<a-assets> <!-- add the gltf models here -->
-    		<a-asset-item id="" src=""></a-asset-item>
+        <img id="deepspace" src="./deepspace.png">
+        <a-asset-item id="crab" src="./gltf/crab.glb"></a-asset-item>
+        <a-asset-item id="sn1006" src="./gltf/sn1006.gltf"></a-asset-item>
     	</a-assets>
 
-    	<a-entity gltf-model="#" 
-                  scale="0 0 0"
-                  position="0 0 0"
-                  rotation="0 0 0"> <!-- entity template -->
+      <a-sky src="#deepspace"></a-sky>
+
+      <a-entity id="rig" rotation="0 0 0" position="0 0 0" wasd-controls look-controls>
+        <a-entity camera="active: true" position="0 0 0"></a-entity>
+      </a-entity>
+
+        <a-entity gltf-model="#crab" 
+                  scale="1 1 1"
+                  position="5 0 0"
+                  rotation="0 0 0"
+                  renderer="antialias: true;
+                   colorManagement: true;
+                   physicallyCorrectLights: true;"> 
         </a-entity>
+
+        <a-entity gltf-model="#sn1006" 
+                  scale="1 1 1"
+                  position="-15 0 0"
+                  rotation="0 0 0"
+                  renderer="antialias: true;
+                   colorManagement: true;
+                   physicallyCorrectLights: true;"> 
+        </a-entity>
+
     </a-scene>
   </body>
 </html>
+
+<!-- ASSET TEMPLATES -->
+<!-- <a-asset-item id="" src=""></a-asset-item> -->
+
+<!-- <a-entity gltf-model="#" 
+                  scale="0 0 0"
+                  position="0 0 0"
+                  rotation="0 0 0"> 
+        </a-entity> entity template-->
