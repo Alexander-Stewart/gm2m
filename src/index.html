@@ -4,21 +4,52 @@
     <meta charset="utf-8">
     <title>Model Playground</title>
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v4.2.0/dist/aframe-extras.min.js"></script>
     <script src="https://unpkg.com/aframe-curve-component/dist/aframe-curve-component.min.js"></script>
+    <script src="https://rawgit.com/protyze/aframe-alongpath-component/master/dist/aframe-alongpath-component.min.js"></script>
     <script src="https://unpkg.com/aframe-render-order-component@1.1.0/dist/aframe-render-order-component.min.js"></script>
+    <!-- <script src="https://rawgit.com/aframevr/aframe/master/dist/aframe-master.min.js"></script>
+    <script src="https://unpkg.com/aframe-curve-component/dist/aframe-curve-component.min.js"></script>
+    <script src="https://rawgit.com/protyze/aframe-alongpath-component/master/dist/aframe-alongpath-component.min.js"></script> -->
+    <script type="text/javascript" src="./index.js"></script>
+    <script type="text/javascript" src="./tour.js"></script>
+    <script type="text/javascript" src="./controller.js"></script>
   </head>
   <body>
-    <a-scene background="color: #FAFAFA" stats>
+    <a-scene id="mainScene"
+             background="color: #FAFAFA" 
+             stats
+             render-order="">
     	<a-assets> <!-- add the gltf models here -->
         <img id="deepspace" src="./deepspace.png">
         <a-asset-item id="crab" src="./gltf/crab.glb"></a-asset-item>
-        <a-asset-item id="sn1006" src="./gltf/sn1006.gltf"></a-asset-item>
+        <a-asset-item id="sn1006" src="./gltf/sn1006.glb"></a-asset-item>
     	</a-assets>
 
       <a-sky src="#deepspace"></a-sky>
 
-      <a-entity id="rig" rotation="0 0 0" position="0 0 0" wasd-controls look-controls>
+      <a-entity id="rig" rotation="0 0 0" position="0 0 0" wasd-controls look-controls alongpath>
         <a-entity camera="active: true" position="0 0 0"></a-entity>
+        <!-- all tours go in here -->
+        <a-entity controller>
+          <!-- naming convention: all lower case -->
+          <a-curve id="preorbit" tour> 
+            <a-curve-point position="-1 -0.6 1.5"></a-curve-point>
+            <a-curve-point position="-1 -0.5 1.5"></a-curve-point>
+          </a-curve>
+          <a-curve id="second" tour> 
+            <a-curve-point position="-1 5 6"></a-curve-point>
+            <a-curve-point position="-1 20 0"></a-curve-point>
+          </a-curve>
+          <a-curve id="third" tour> 
+            <a-curve-point position="-1 2 3"></a-curve-point>
+            <a-curve-point position="-1 20 40"></a-curve-point>
+          </a-curve>
+          <a-curve id="chandra" tour> 
+            <a-curve-point position="-1 2 3"></a-curve-point>
+            <a-curve-point position="-1 20 40"></a-curve-point>
+          </a-curve>
+        </a-entity>
       </a-entity>
 
         <a-entity gltf-model="#crab" 
@@ -38,7 +69,6 @@
                    colorManagement: true;
                    physicallyCorrectLights: true;"> 
         </a-entity>
-
     </a-scene>
   </body>
 </html>
@@ -49,5 +79,6 @@
 <!-- <a-entity gltf-model="#" 
                   scale="0 0 0"
                   position="0 0 0"
-                  rotation="0 0 0"> 
-        </a-entity> entity template-->
+                  rotation="0 0 0"
+                  render-order="object"> 
+      </a-entity> entity template-->
