@@ -9,18 +9,18 @@ AFRAME.registerComponent('controller', {
 
     // Are we viewing on a platform where we can't really click, or a
     // desktop where we can?
-    var canClick = !AFRAME.utils.device.isMobile();
+    this.canClick = !AFRAME.utils.device.isMobile();
 
-    var tours = [];
-    var numTours = 0;
-    var currentTour = 0;
+    this.tours = [];
+    this.numTours = 0;
+    this.currentTour = 0;
 
     // getting all the tour objects.
-    var tours = Array.from(this.el.children).map(child => child.getAttribute("tour"))
-    var numTours = tours.length;
+    this.tours = Array.from(this.el.children).map(child => child.getAttribute("tour"))
+    this.numTours = this.tours.length;
 
-    console.log(tours);
-    console.log(numTours);
+    console.log(this.tours);
+    console.log(this.numTours);
 
     // Now i will create a method to handle changing to the next tour...
     var advanceTour = function() {
@@ -31,11 +31,12 @@ AFRAME.registerComponent('controller', {
       var alongpath = el.getAttribute("alongpath");
 
       // the next tour, modding will go back to the beginning if needed.
-      currentTour = (currentTour + 1) % this.numTours;
+      this.currentTour = (this.currentTour + 1) % this.numTours;
+      console.log("new tour number: ", this.currentTour)
 
       // getting new tour information...
-      var tour_name = tours[currentTour].tour_name;
-      var dur = tours[currentTour].dur;
+      var tour_name = this.tours[this.currentTour].tour_name;
+      var dur = this.tours[this.currentTour].dur;
 
       // Change the curve, and restart the animation to follow the new
       // curve. The setAttribute function restarts the animation in
@@ -44,6 +45,7 @@ AFRAME.registerComponent('controller', {
                       "curve: #" + tour_name +
                       "; dur: " + dur + ";");
     };
+    let advanceTourBinded = advanceTour.bind(this);
 
     // setting a handler to handle clicks...
     var clickHandler = function(event) {
@@ -52,14 +54,14 @@ AFRAME.registerComponent('controller', {
       // First, stop listening for this event.  We'll start listening
       // again after the next segment is completed.
       document.getElementById('mainScene')
-        .removeEventListener('click', clickHandler);
+        .removeEventListener('click', clickHandler.bind(this));
 
       // Advance to the next part of the tour.
-      advanceTour();
+      advanceTourBinded();
 
       // Listen for the end of the next segment of the tour.
       document.getElementById("rig")
-        .addEventListener('movingended', moveEndHandler);
+        .addEventListener('movingended', moveEndHandler.bind(this));
     };
 
     // setting a handler to update info when a tour ends
@@ -67,32 +69,34 @@ AFRAME.registerComponent('controller', {
       console.log("moveEndHandler has been activated.");
 
       // Find the name of the path we just finished.
-      var tour = tours[currentTour];
-      console.log("currentTour: ", currentTour)
+      var tour = this.tours[this.currentTour];
+      console.log("currentTour: ", this.currentTour)
 
       var mainScene = document.getElementById('mainScene');
 
       // UPDATING TEXT WOULD HAPPEN HERE.
 
       // HANDLING SOUND WOULD HAPPEN BEFORE CHECKING CLICK.
+      //console.log('this: ', this)
 
       // There is no sound to play.  If we can click, listen for one.
-      if (canClick) {
-        if (currentTour.playWhile) advanceTour();
-          mainScene.addEventListener('click', clickHandler);
+      if (this.canClick) { // this.canClick
+        if (tour.playWhile) advanceTourBinded();
+          mainScene.addEventListener('click', clickHandler.bind(this));
       } else {
+        //console.log("we here...")
         // If we can't click, pause (if a pause is specified), then click.
         var pause = tour.pauseDuration ? 
                     tour.pauseDuration : 1000;
-        setTimeout(clickHandler, pause);
+        setTimeout(clickHandler.bind(this), pause);
       };
     }
 
     // setting up and starting going through all of the tours!
     document.getElementById("rig").setAttribute("alongpath",
-                      "curve: #" + tours[0].tour_name +
-                      "; dur: " + tours[0].dur + ";");
-    document.getElementById("rig").addEventListener('movingended', moveEndHandler);
+                      "curve: #" + this.tours[0].tour_name +
+                      "; dur: " + this.tours[0].dur + ";");
+    document.getElementById("rig").addEventListener('movingended', moveEndHandler.bind(this));
 
 
   },
