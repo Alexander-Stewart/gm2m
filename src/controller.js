@@ -7,10 +7,16 @@ AFRAME.registerComponent('controller', {
     // once gathered, I will start the tour using the along path event.
     // this.alongPath = this.el.getAttribute("alongpath")
 
-    // Are we viewing on a platform where we can't really click, or a
-    // desktop where we can?
-    this.canClick = !AFRAME.utils.device.isMobile();
-
+    // checks if we are viewing on a mobile device
+    // check this out and see how to get click information,
+    // maybe library...
+    // this.canClick = !AFRAME.utils.device.isMobile();
+    // console.log(this.canClick)
+    // this.once is an options object to be passed
+    // to the eventlisteners. This makes it where
+    // an event is only called once per invoke. 
+    this.once = {once : true};
+        
     this.tours = [];
     this.numTours = 0;
     this.currentTour = 0;
@@ -22,17 +28,18 @@ AFRAME.registerComponent('controller', {
     console.log(this.tours);
     console.log(this.numTours);
 
-    // Now i will create a method to handle changing to the next tour...
+    // Now I will create a method to handle changing to the next tour...
     var advanceTour = function() {
-      console.log("Advancing tour...");
+      // console.log("Advancing tour...");
 
       // Get the alongpath attribute from the camera entity.
       var el = document.getElementById("rig");
       var alongpath = el.getAttribute("alongpath");
 
       // the next tour, modding will go back to the beginning if needed.
+      console.log("(AT)currentTour: ", this.currentTour)
       this.currentTour = (this.currentTour + 1) % this.numTours;
-      console.log("new tour number: ", this.currentTour)
+      console.log("(AT)new tour number: ", this.currentTour)
 
       // getting new tour information...
       var tour_name = this.tours[this.currentTour].tour_name;
@@ -49,28 +56,29 @@ AFRAME.registerComponent('controller', {
 
     // setting a handler to handle clicks...
     var clickHandler = function(event) {
-      console.log("click handler has been activated.")
+      console.log(document.getElementById('mainScene'))
+      // console.log("click handler has been activated.")
 
       // First, stop listening for this event.  We'll start listening
       // again after the next segment is completed.
       document.getElementById('mainScene')
-        .removeEventListener('click', clickHandler.bind(this));
+        .removeEventListener('click', clickHandler);
 
       // Advance to the next part of the tour.
       advanceTourBinded();
 
       // Listen for the end of the next segment of the tour.
       document.getElementById("rig")
-        .addEventListener('movingended', moveEndHandler.bind(this));
+        .addEventListener('movingended', moveEndHandler.bind(this), this.once);
     };
 
     // setting a handler to update info when a tour ends
     var moveEndHandler = function(event) {
-      console.log("moveEndHandler has been activated.");
+      // console.log("moveEndHandler has been activated.");
 
       // Find the name of the path we just finished.
       var tour = this.tours[this.currentTour];
-      console.log("currentTour: ", this.currentTour)
+      console.log("(MEH)currentTour: ", this.currentTour)
 
       var mainScene = document.getElementById('mainScene');
 
@@ -80,23 +88,24 @@ AFRAME.registerComponent('controller', {
       //console.log('this: ', this)
 
       // There is no sound to play.  If we can click, listen for one.
-      if (this.canClick) { // this.canClick
-        if (tour.playWhile) advanceTourBinded();
-          mainScene.addEventListener('click', clickHandler.bind(this));
+      if (true) { // this.canClick
+        console.log('We can click')
+        // if (tour.playWhile) advanceTourBinded();
+          mainScene.addEventListener('click', clickHandler.bind(this), this.once);
       } else {
-        //console.log("we here...")
-        // If we can't click, pause (if a pause is specified), then click.
-        var pause = tour.pauseDuration ? 
-                    tour.pauseDuration : 1000;
-        setTimeout(clickHandler.bind(this), pause);
-      };
-    }
+        // console.log("we here...")
+        // // If we can't click, pause (if a pause is specified), then click.
+        // var pause = tour.pauseDuration ? 
+        //             tour.pauseDuration : 1000;
+        // setTimeout(clickHandler.bind(this), pause);
+      }
+    };
 
     // setting up and starting going through all of the tours!
     document.getElementById("rig").setAttribute("alongpath",
                       "curve: #" + this.tours[0].tour_name +
                       "; dur: " + this.tours[0].dur + ";");
-    document.getElementById("rig").addEventListener('movingended', moveEndHandler.bind(this));
+    document.getElementById("rig").addEventListener('movingended', moveEndHandler.bind(this), this.once);
 
 
   },
@@ -111,5 +120,7 @@ AFRAME.registerComponent('controller', {
 
   tick: function (time, timeDelta) {
     // Do something on every scene tick or frame.
+    // console.log("pos: ", document.getElementById("rig").getAttribute("position"))
+    // console.log("rot: ", document.getElementById("rig").getAttribute("rotation"))
   }
 });
