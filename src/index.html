@@ -27,7 +27,7 @@
       <a-sky src="#deepspace"></a-sky>
 
       <a-entity id="rig" rotation="0 0 0" position="0 0 0" wasd-controls look-controls alongpath>
-        <a-entity camera="active: true" position="0 0 0" look-at="0 0 0"></a-entity>
+        <a-entity camera="active: true" position="0 0 0" look-at="crab-object"></a-entity>
         <!-- all tours go in here -->
         <a-entity controller>
           <!-- naming convention: all lower case -->
@@ -51,13 +51,13 @@
       </a-entity>
 
         <a-entity gltf-model="#crab"
+                  id="crab-object"
                   scale="1 1 1"
                   position="5 0 0"
                   rotation="0 0 0"
                   renderer="antialias: true;
                    colorManagement: true;
                    physicallyCorrectLights: true;">
-          <a-entity id="crab-object"/> 
         </a-entity>
 
         <!-- <a-entity gltf-model="#sn1006" 
