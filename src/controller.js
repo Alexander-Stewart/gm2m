@@ -80,9 +80,33 @@ AFRAME.registerComponent('controller', {
       var tour = this.tours[this.currentTour];
       console.log("(MEH)currentTour: ", this.currentTour)
 
+      var mainRig = document.getElementById("rig");
       var mainScene = document.getElementById('mainScene');
 
       // UPDATING TEXT WOULD HAPPEN HERE.
+      // Display the text for the (end of the) path.
+      var textHolder = document.getElementById("textHolder");
+
+      // Determine what text to show.  Note that if clicking is not
+      // possible, there might be alternate text to display.
+      var textVal = textHolder.getAttribute("text");
+      textVal.value = tour.text;
+      textHolder.setAttribute("text", textVal);
+
+      // getting diretion to face the text 
+      var direction = new THREE.Vector3();
+      this.el.sceneEl.camera.getWorldDirection( direction );
+
+      // Now we determine where to display the text.
+      var pos = mainRig.getAttribute("position");
+      var offset = tour.textOffset;
+      var textPos = {x: pos.x + offset.x + direction.x,
+                 y: pos.y + offset.y + direction.y,  // to accommodate camera rig
+                 z: pos.z + offset.z + direction.z};
+      var textRot = tour.textRotate;
+      textHolder.setAttribute("position", textPos);
+      // textHolder.setAttribute("rotation", textRot);
+      console.log("rendering text at:", textPos, textRot, textHolder);
 
       // HANDLING SOUND WOULD HAPPEN BEFORE CHECKING CLICK.
       //console.log('this: ', this)

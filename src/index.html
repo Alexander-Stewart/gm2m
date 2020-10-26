@@ -26,24 +26,33 @@
 
       <a-sky src="#deepspace"></a-sky>
 
+      <a-entity id="textHolder"
+                    position="0 0 0"
+                    look-at="[camera]"
+                    opacity="0.9"
+                    text="width: 1; color: white; align: center;
+                          anchor: center; side: double;
+                          value: LOOK HERE MF">
+        </a-entity>
+
       <a-entity id="rig" rotation="0 0 0" position="0 0 0" wasd-controls look-controls="pointerLockEnabled: true" alongpath>
-        <a-entity camera="active: true" position="0 0 0"></a-entity>
+        <a-entity id="camera" camera="active: true" position="0 0 0"></a-entity>
         <!-- all tours go in here -->
         <a-entity controller>
           <!-- naming convention: all lower case -->
-          <a-curve id="one" tour> 
+          <a-curve id="one" tour="text: FIRST STOP"> 
             <a-curve-point position="-3 -0.5 -3.4" rotation="0 -112 0"></a-curve-point>
             <a-curve-point position="0.7 -0.5 7.7" rotation="0 -30 0"></a-curve-point>
           </a-curve>
-          <a-curve id="two" tour> 
+          <a-curve id="two" tour="text: SECOND STOP"> 
             <a-curve-point position="0.7 -0.5 7.7"></a-curve-point>
             <a-curve-point position="13.5 -0.5 5"></a-curve-point>
           </a-curve>
-          <a-curve id="three" tour> 
+          <a-curve id="three" tour="text: THIRD STOP"> 
             <a-curve-point position="13.5 -0.5 5"></a-curve-point>
             <a-curve-point position="10 -0.5 -7.4"></a-curve-point>
           </a-curve>
-          <a-curve id="four" tour> 
+          <a-curve id="four" tour="text: FOURTH STOP"> 
             <a-curve-point position="10 -0.5 -7.4"></a-curve-point>
             <a-curve-point position="-3 -0.5 -3.4"></a-curve-point>
           </a-curve>
